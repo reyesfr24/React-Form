@@ -1,17 +1,33 @@
-import {z} from "zod"
-
-const schema = z.object({
-  name: z.string().min(1, "El nombre es obligatorio"), // Por defecto las propiedades z de schema son obligatorias
-  email: z.email("Correo inválido").min(1, "El correo es obligatorio"),
-  password: z.string().min(5, "La contraseña debe de tener al menos 6 caracteres"),
-  confirmPassword: z.string().min(6, "La confimración debe tener al menos 6 caracteres")
-}).refine(data => data.password === data.confirmPassword, {
-  message: "Las contraseñas son inválidas",
-  path: ['confirmPassword']
-})
-
-type FormValues = z.infer<typeof schema>;
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type SubmitHandler, useForm } from "react-hook-form"
+import InputForm from "./components/CustomInput"
+import { type FormValues, schema } from "./models" 
 
 const CustomForm = () => {
-  
+  const {control, handleSubmit, formState: { errors }} = 
+  useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    } 
+  });
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    console.log(data)
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <InputForm name="name" control={control} label="Nombre" type="text" error={errors.name} />
+      <InputForm name="email" control={control} label="Email" type="email" error={errors.email} />
+      <InputForm name="password" control={control} label="Contraseña" type="password" error={errors.password} />
+      <InputForm name="confirmPassword" control={control} label="Confirmar contraseña" type="password" error={errors.confirmPassword} />
+      <button type="submit">Enviar</button>
+    </form>
+  )
 }
+
+export default CustomForm;
