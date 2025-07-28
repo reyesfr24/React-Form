@@ -1,69 +1,99 @@
-# React + TypeScript + Vite
+# 🧾 React Formulario con Validación Zod + React Hook Form
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto muestra un ejemplo de formulario en React con validación de datos utilizando **React Hook Form** y **Zod**. Incluye inputs personalizados conectados al sistema de validación a través de `Controller`, lo que permite usar componentes reutilizables sin perder control ni validación.
 
-Currently, two official plugins are available:
+## 🚀 Tecnologías utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* [React](https://reactjs.org/)
+* [React Hook Form](https://react-hook-form.com/)
+* [Zod](https://zod.dev/)
+* [TypeScript](https://www.typescriptlang.org/) (para tipos fuertes y autocompletado)
+* CSS personalizado
 
-## Expanding the ESLint configuration
+## 📁 Estructura del proyecto
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── App.css
+├── App.tsx
+├── main.tsx                      # Punto de entrada principal (Vite)
+├── index.css
+├── components/
+│   ├── CustomForm/
+│   │   ├── components/
+│   │   │   ├── CustomInput.tsx   # Componente input reutilizable
+│   │   │   ├── CustomInput.css   # Estilos del input
+│   │   │   └── index.ts
+│   │   ├── models/
+│   │   │   ├── form.model.ts     # Tipos y esquema de validación con Zod
+│   │   │   └── index.ts
+│   │   ├── CustomForm.tsx        # Componente principal del formulario
+│   │   └── index.ts
+│   └── CustomLayout/             # Carpeta reservada para layout (no usada aún)
+└── vite-env.d.ts
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📋 Validación del formulario
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+La validación se basa en un esquema Zod que define las reglas de cada campo (por ejemplo, email válido, contraseñas iguales, etc.). Este esquema se adapta al sistema de React Hook Form usando `zodResolver`.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Campos del formulario:
+
+* **Nombre** (`name`)
+* **Email** (`email`)
+* **Contraseña** (`password`)
+* **Confirmar contraseña** (`confirmPassword`)
+
+### Ejemplo de esquema (`models.ts`):
+
+```ts
+import { z } from "zod";
+
+export const schema = z.object({
+  name: z.string().min(1, "El nombre es obligatorio"),
+  email: z.string().email("Correo no válido"),
+  password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Las contraseñas no coinciden",
+  path: ["confirmPassword"]
+});
+
+export type FormValues = z.infer<typeof schema>;
 ```
+
+## 🧠 ¿Qué hace especial este proyecto?
+
+✅ Inputs personalizados pero **conectados a React Hook Form**
+✅ Validación **automatizada con Zod**
+✅ **Errores renderizados** automáticamente si se violan las reglas
+✅ Código limpio y modular
+
+## ▶️ Cómo ejecutarlo
+
+1. Clona este repositorio:
+
+```bash
+git clone https://github.com/tu-usuario/tu-repo.git
+cd tu-repo
+```
+
+2. Instala las dependencias:
+
+```bash
+npm install
+```
+
+3. Ejecuta el proyecto:
+
+```bash
+npm run dev
+```
+
+> Asegúrate de tener instalado [Node.js](https://nodejs.org/) y [Vite](https://vitejs.dev/) si usas este sistema de bundling.
+
+## 📄 Licencia
+
+MIT License.
+
+
