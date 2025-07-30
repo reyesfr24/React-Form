@@ -25,6 +25,7 @@
 
 .form-control {
     padding: 0.5rerm;
+    height: 25px;
     border: 1px solid grey;
     border-radius: 0.25rem;
 }

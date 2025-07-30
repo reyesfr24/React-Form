@@ -19,6 +19,8 @@ const CustomForm = () => {
 
     resolver: zodResolver(schema), // conectamos la validación de Zod con React Hook Form. Si el formulario no cumple las reglas del schema, se generan errores automáticamente.
     // Si no estuviera resolver tendíramos que validar manualmente el cada input
+    mode: "onBlur",
+    
     defaultValues: {
       name: '',
       email: '',
