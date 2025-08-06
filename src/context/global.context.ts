@@ -5,6 +5,7 @@ interface GlobalContextType {
   setValue: React.Dispatch<React.SetStateAction<number>>
 }
 
+// “Contenedor” para los datos globales
 export const GlobalContext = createContext<GlobalContextType>({
   value: 0,
   setValue: () => { }
