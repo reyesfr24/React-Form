@@ -1,10 +1,12 @@
 import './App.css'
-import { BookReader } from './components';
+import { BookReader, FocusInput } from './components';
 
 function App() {
   return (
-    <BookReader />
-      
+    <>
+      <BookReader />
+      <FocusInput /> 
+    </>  
   )
 }
 
