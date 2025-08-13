@@ -1,15 +1,10 @@
-import { createContext } from 'react'
 import './App.css'
-import CustomForm from './components/CustomForm/CustomForm'
-import { GlobalProvider } from './context/global.provider'
-
-export const GentlemanContext = createContext({}); 
+import { BookReader } from './components';
 
 function App() {
   return (
-    <GlobalProvider>
-      <CustomForm />
-    </GlobalProvider>
+    <BookReader />
+      
   )
 }
 
