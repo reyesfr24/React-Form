@@ -14,7 +14,7 @@ interface GlobalProps {
 // Se renderizan los children envueltos en ese Provider, por lo que todo lo que esté dentro tendrá acceso al contexto
 
 export const GlobalProvider = ({children}: GlobalProps) => {
-  const [value, setValue] = useState<number>(EmptyGlobalState)
+  const [value, setValue] = useState<number>(EmptyGlobalState) 
 
   return (
     <GlobalContext.Provider value={{ value, setValue}}>{children}</GlobalContext.Provider>
