@@ -32,7 +32,7 @@ export const ShoppingCart = () => {
   const totalCost = useMemo(() => items.reduce((total, item) => total + item.price, 0)
   , [items])
 
-  const finalCost = totalCost - discount;
+  const finalCost = useMemo(() => totalCost - discount, [totalCost, discount]);
 
   const addItem = () => {
     const newItem = {
