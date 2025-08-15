@@ -1,0 +1,4 @@
+Trigger que hace que un componente se renderice:
+    - Trigger inicial 
+    - Parámetros de entrada del componente cambian
+    - Cambio de estado
