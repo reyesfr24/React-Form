@@ -4,7 +4,7 @@
   pasando props.
 */
 
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useState, type ReactNode } from "react";
 
 export const ModalContext = createContext<{
   state: boolean,
@@ -20,12 +20,3 @@ export const ModalProvider = ({children}: {children: ReactNode}) => {
   return <ModalContext.Provider value={{state, setState}}>{children}</ModalContext.Provider>
 }
 
-export const useModalContext = () => {
-  const context = useContext(ModalContext)
-
-    if(!context) {
-      throw new Error("Modal is being used outside it's provider")
-    }
-        
-  return context;
-}

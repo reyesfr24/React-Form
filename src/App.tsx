@@ -1,6 +1,6 @@
 import './App.css'
 import { Modal } from './components'
-import { useModalContext } from './context/ModalContext'
+import { useModalContext } from './context'
 
 
 function App() {
