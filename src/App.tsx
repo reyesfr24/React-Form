@@ -1,16 +1,23 @@
-import { EffectExample, PromiseError } from './components/ErrorBoundaryExamples'
+import { useEffect, useState } from 'react'
+import { getCharacter } from './services/api.service'
+import { emptyCharacter, type Character } from './models/character.model'
 // import UndefinedExample from './components/ErrorBoundaryExamples/UndefinedExample'
 
 function App() {
+  const [data, setData] = useState<Character>(emptyCharacter)
+  
+  const fetchRick = async () => {
+    const result = await getCharacter(1)
+    setData(result.data)
+  }
+
+  useEffect(() => {
+    fetchRick()
+  }, [])
+
   return ( 
     <>
-    <PromiseError />
-      {/* <UndefinedExample /> */}
-      {/* <EffectExample /> */}
-      {/* <Modal>
-        <h2>Hola desde la Modal</h2>
-      </Modal>
-      <button onClick={openModal}>Abrir modal</button> */}
+    {JSON.stringify(data)}
     </>
   )
 }
