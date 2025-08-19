@@ -16,3 +16,7 @@ const BASE_URL = "https://rickandmortyapi.com/api"
 export const getCharacter = (id: number) => {
   return axios.get<Character>(`${BASE_URL}/characters/${id}`)
 }
+
+export const newCharacter = (character: Character) => {
+  return axios.post<null>(`${BASE_URL}/characters/`, character)
+}
