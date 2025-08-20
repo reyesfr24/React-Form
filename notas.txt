@@ -1,4 +1,71 @@
-Trigger que hace que un componente se renderice:
+Triggers que hace que un componente se renderice:
     - Trigger inicial 
     - Parámetros de entrada del componente cambian
     - Cambio de estado
+
+--------------------------------------------------
+
+Type -> crea un alias de tipo.
+Sirve para darle un nombre a cualquier combinación de tipos: primitivos, uniones, intersecciones, funciones, etc.
+Usa type cuando quieras alias flexibles (uniones, funciones, genéricos, etc.)
+
+Interface -> describe la forma de un objeto o clase.
+Es como un contrato que dice qué propiedades y métodos debe tener un objeto.
+Usa interface cuando quieras describir la forma de un objeto, especialmente si planeas extenderlo o trabajas con clases.
+
+---------------------------------------------------
+Llamadas API:
+
+[ Componente React ]
+         |
+         | useApi(() => getCharacter(id).call)
+         v
+[ Custom Hook: useApi ]
+ - Crea estado: data, loading, error
+ - Recibe función de llamada (call)
+ - Maneja fetch y cancelación con AbortController
+         |
+         | Llama a la función de servicio
+         v
+[ Servicio: api.service.ts ]
+ - getCharacter(id)
+ - Devuelve { call: axiosInstance.get(...), controller }
+         |
+         | axiosInstance.get(...)
+         v
+[ Axios Interceptado: axios.service.ts ]
+ - Request Interceptor:
+      - Agrega token si existe
+      - Log de URL
+ - Petición HTTP real
+ - Response Interceptor:
+      - Log de URL y data
+      - Manejo de errores centralizado
+         |
+         v
+[ Servidor API (Rick & Morty API) ]
+ - Procesa la petición
+ - Devuelve datos JSON
+         |
+         v
+[ Axios Interceptado ]
+ - Response llega al interceptor
+ - Retorna datos al service
+         |
+         v
+[ Servicio: api.service.ts ]
+ - call se resuelve con los datos
+         |
+         v
+[ Custom Hook: useApi ]
+ - Actualiza estado: data, loading = false
+ - Maneja error si ocurre
+         |
+         v
+[ Componente React ]
+ - Renderiza UI con data o error
+
+->>>> Notas clave del flujo:
+AbortController se usa dentro de useApi para cancelar la petición si el componente se desmonta antes de recibir respuesta.
+Los interceptors de Axios se ejecutan en todas las peticiones sin tener que modificarlas individualmente.
+El componente solo se preocupa por mostrar la UI, useApi maneja el estado de la petición y la cancelación, y los servicios manejan la URL y parámetros de la API.

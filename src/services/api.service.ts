@@ -9,14 +9,23 @@ Los servicios se encargan de obtener/procesar datos (qué hacer con la informaci
 */
 
 import axios from "axios"
-import { type Character } from "../models/character.model"
+import { loadAbort } from "../utilities"
+import type { useApiCall, Character } from "../models"
 
 const BASE_URL = "https://rickandmortyapi.com/api"
 
-export const getCharacter = (id: number) => {
-  return axios.get<Character>(`${BASE_URL}/characters/${id}`)
+export const getCharacter = (id: number): useApiCall<Character> => {
+  const controller = loadAbort(); // Crea un AbortController para esa petición
+  return { 
+    call: axios.get<Character>(`${BASE_URL}/character/${id}`, {signal: controller.signal}), 
+    controller
+  }
 }
 
-export const newCharacter = (character: Character) => {
-  return axios.post<null>(`${BASE_URL}/characters/`, character)
+export const newCharacter = (character: Character): useApiCall<null> => {
+  const controller = loadAbort();
+  return {
+    call: axios.post<null>(`${BASE_URL}/character/`, character, { signal: controller.signal }),
+    controller
+  }
 }

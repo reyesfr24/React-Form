@@ -1,27 +1,42 @@
-import type { AxiosResponse } from "axios";
-import { useEffect, useState } from "react";
+/*
+  useAPI -> Plantilla reutilizable para trabajar con APIs en React.
+  CustomHook para gestionar fácilmente llamadas a APIs desde los de React. En vez de que cada componente tenga que escribir todo el código para:
+  manejar el estado de loading (cargando), guardar la data que devuelve la API, capturar posibles error, se centraliza todo aquí.
+  Es una versión casera y simplificada de lo que hace React Query.
+*/
 
-type UseApiOptions = {
+import { useCallback, useEffect, useState } from "react";
+import type { useApiCall } from "../models";
+
+type UseApiOptions<P> = {
   autoFetch?: boolean;
-}
+} & (P extends null ? { params?: P } : {params: P })
+
 type Data<T> = T | null;
 type CustomError = Error | null;
 
-interface UseApiResult<T> {
+
+interface UseApiResult<T, P> {
   loading: boolean;
   data: Data<T>;
   error: CustomError;
-  fetch: () => void;
+  fetch: (param: P) => void;
 }
+/* 
+  “Voy a exportar una constante llamada useApi, que es una función genérica (puede recibir cualquier tipo de datos como T). 
+  Esta función recibe dos parámetros: uno obligatorio (apiCall, que es otra función que devuelve una promesa de Axios con datos del tipo T)
+  y uno opcional (options). Al final, devuelve un objeto con la forma definida en UseApiResult<T>.” 
+*/
 
-export const useApi = <T>(apiCall: () => Promise<AxiosResponse<T>>, options?: UseApiOptions): UseApiResult<T> => {
+export const useApi = <T, P,>(apiCall: (param: P) => useApiCall<T>, options?: UseApiOptions<P>): UseApiResult<T, P> => {
   const [loading, setLoading] = useState<boolean>(false)
   const [data, setData] = useState<Data<T>>(null)
   const [error, setError] = useState<CustomError>(null)
 
-  const fetch = () => {
-    const call = apiCall();
+  const fetch = useCallback((param: P) => {
+    const { call, controller } = apiCall(param);
     setLoading(true);
+
     call.then((response) =>{
       setData(response.data);
       setError(null);
@@ -30,11 +45,22 @@ export const useApi = <T>(apiCall: () => Promise<AxiosResponse<T>>, options?: Us
     }).finally(() => {
       setLoading(false)
     })
-  }
+
+    return () => controller.abort()
+  }, [apiCall])
 
   useEffect(() => {
-    fetch()
-  }, [])
+    if (options && options.autoFetch && options.params) {
+      if (options.params) {
+        return fetch(options.params);
+      } else {
+        return fetch({} )
+      }
+      
+    }
+  }, [fetch, options])
 
   return { loading, data, error, fetch }
 }
+
+// 12:07:17
