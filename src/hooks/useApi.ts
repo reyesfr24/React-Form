@@ -10,7 +10,8 @@ import type { useApiCall } from "../models";
 
 type UseApiOptions<P> = {
   autoFetch?: boolean;
-} & (P extends null ? { params?: P } : {params: P })
+  params: P;
+}
 
 type Data<T> = T | null;
 type CustomError = Error | null;
@@ -50,17 +51,10 @@ export const useApi = <T, P,>(apiCall: (param: P) => useApiCall<T>, options?: Us
   }, [apiCall])
 
   useEffect(() => {
-    if (options && options.autoFetch && options.params) {
-      if (options.params) {
-        return fetch(options.params);
-      } else {
-        return fetch({} )
-      }
-      
+    if (options?.autoFetch) {
+      return fetch(options.params);
     }
-  }, [fetch, options])
+  }, [fetch, options?.autoFetch, options?.params])
 
   return { loading, data, error, fetch }
 }
-
-// 12:07:17

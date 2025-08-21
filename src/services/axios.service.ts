@@ -1,14 +1,10 @@
 /*
   Centralizar la configuración de Axios
-Agregar interceptores
-Evitar repetir código en toda la app
-
-Todos los servicios que hagan axiosInstance.get/post/... ya se benefician de los interceptores y la configuración.
-
-Controlar errores de manera centralizada
-
-Por ejemplo, si hay un error de autenticación, podrías hacer logout automático en este interceptor y no en cada componente.
-
+  Agregar interceptores
+  Evitar repetir código en toda la app
+  Todos los servicios que hagan axiosInstance.get/post/... ya se benefician de los interceptores y la configuración.
+  Controlar errores de manera centralizada
+  Por ejemplo, si hay un error de autenticación, podrías hacer logout automático en este interceptor y no en cada componente.
 */
 
 import axios, { type AxiosInstance, type AxiosResponse, type InternalAxiosRequestConfig } from "axios";
